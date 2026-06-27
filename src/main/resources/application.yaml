@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: books-store
+  datasource:
+    url: jdbc:postgresql://localhost:5432/store
+    driver-class-name: org.postgresql.Driver
+    username: myuser
+    password: secret
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  graphql:
+    graphiql:
+      enabled: true

@@ -1,0 +1,11 @@
+input BookAuthorInput {
+    authorId: ID
+    bookId: ID!
+    authorRole: String!
+}
+
+type BookAuthorEdge {
+    authorRole: String!
+    author: Author!
+    book: Book!
+}

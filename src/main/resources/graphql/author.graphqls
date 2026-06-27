@@ -1,0 +1,7 @@
+type Author {
+    id: Int!
+    firstName: String!
+    lastName: String
+    books: [BookAuthorEdge!]!
+    #role: String! --> it won't work as role is not property of Author it is property of both book and author
+}

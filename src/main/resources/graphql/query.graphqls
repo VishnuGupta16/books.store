@@ -1,0 +1,7 @@
+type Query {
+    books: [Book!]!
+    book(id: ID): Book!
+    author(id: ID): Author!
+    authors: [Author!]!
+    search(query: String!): [SearchBookOrAuthor]
+}
