@@ -1,11 +1,17 @@
+enum AuthorRole {
+    MAIN_AUTHOR
+    CO_AUTHOR
+    EDITOR
+}
+
 input BookAuthorInput {
     authorId: ID
     bookId: ID!
-    authorRole: String!
+    authorRole: AuthorRole!
 }
 
 type BookAuthorEdge {
-    authorRole: String!
+    authorRole: AuthorRole!
     author: Author!
     book: Book!
 }
