@@ -2,7 +2,6 @@ package gupta.vishnu.graphql.books.store.controller;
 
 import gupta.vishnu.graphql.books.store.dto.BookAuthorInput;
 import gupta.vishnu.graphql.books.store.dto.BookInput;
-import gupta.vishnu.graphql.books.store.entity.Author;
 import gupta.vishnu.graphql.books.store.entity.Book;
 import gupta.vishnu.graphql.books.store.entity.BookAuthor;
 import gupta.vishnu.graphql.books.store.repo.AuthorRepository;
@@ -18,15 +17,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-public class BookAuthorController {
+public class BookController {
 
-    private final Logger log = LoggerFactory.getLogger(BookAuthorController.class);
+    private final Logger log = LoggerFactory.getLogger(BookController.class);
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final BookAuthorRepository bookAuthorRepository;
 
-    public BookAuthorController(BookRepository bookRepository, AuthorRepository authorRepository, BookAuthorRepository bookAuthorRepository) {
+    public BookController(BookRepository bookRepository, AuthorRepository authorRepository, BookAuthorRepository bookAuthorRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.bookAuthorRepository = bookAuthorRepository;
@@ -54,13 +53,6 @@ public class BookAuthorController {
 //                .toList();
 //    }
 
-    //This will not get role
-//    @SchemaMapping(typeName = "Author", field = "books")
-//    public List<Book> books(Author author) {
-//        return author.getBookAuthors().stream()
-//                .map(BookAuthor::getBook)
-//                .toList();
-//    }
 
     //This causes N+1 query problem
 //    @SchemaMapping(typeName = "Book", field = "authors")
@@ -69,6 +61,7 @@ public class BookAuthorController {
 //        return bookAuthorRepository.findByBookId(book.getId());
 //    }
 
+    //omits books with no edges ( no book author entry in book author table)
     @BatchMapping(typeName = "Book", field = "authors")
     public Map<Book, List<BookAuthor>> authors(List<Book> books) {
         log.info("Authors for books: {}", books);
@@ -81,27 +74,6 @@ public class BookAuthorController {
         return all.stream().collect(Collectors.groupingBy(bookAuthor -> passedIdVsBook.get(bookAuthor.getBook().getId()), Collectors.toList()));
     }
 
-    //This causes N+1 query problem
-    //@SchemaMapping(typeName = "Author", field = "books")
-//    public List<BookAuthor> books(Author author) {
-//        return bookAuthorRepository.findByAuthorId(author.getId());
-//    }
-
-    @BatchMapping(typeName = "Author", field = "books")
-    public Map<Author, List<BookAuthor>> books(List<Author> authors) {
-        log.info("Searching for books written by author: {}", authors.stream().map(Author::getId).collect(Collectors.toList()));
-        List<Long> ids = authors.stream().map(Author::getId).toList();
-        List<BookAuthor> all = bookAuthorRepository.findByAuthorIdIn(ids);
-        Map<Long, Author> passedIdVsAuthor = authors.stream().collect(Collectors.toMap(Author::getId,author -> author));
-        return all.stream().collect(Collectors.groupingBy(bookAuthor -> passedIdVsAuthor.get(bookAuthor.getAuthor().getId()), Collectors.toList()));
-    }
-
-
-    //This won't work as Graphql only pass immediate parent which is author and book is grandparent.  To pass other context other than immediate parent we need to use DataFetcherResult to set context as per need.
-//    @SchemaMapping(typeName = "Author", field = "role")
-//    public String role(Author author, Book book) {
-//        return bookAuthorRepository.findByBookIdAndAuthorId(book.getId(), author.getId()).map(bookAuthor -> bookAuthor.getAuthorRole().name()).orElse( null);
-//    }
 
     @MutationMapping
     public Book createBook(@Argument BookInput bookInput) {
@@ -115,17 +87,5 @@ public class BookAuthorController {
 
     }
 
-    @QueryMapping
-    public Author author(@Argument Long id) {
-        log.info("Searching for author: {}", id);
-        return authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author " + id + " not found"));
-    }
-
-    @QueryMapping
-    public List<Author> authors() {
-        log.info("Searching for authors");
-        return authorRepository.findAll();
-    }
 
 }

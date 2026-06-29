@@ -1,6 +1,5 @@
 package gupta.vishnu.graphql.books.store.entity;
 
-import gupta.vishnu.graphql.books.store.dto.AuthorRole;
 import jakarta.persistence.*;
 
 @Entity

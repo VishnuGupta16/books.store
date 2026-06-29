@@ -1,4 +1,4 @@
-package gupta.vishnu.graphql.books.store.dto;
+package gupta.vishnu.graphql.books.store.entity;
 
 public enum AuthorRole {
     MAIN_AUTHOR,
