@@ -1,0 +1,17 @@
+type Review {
+    id: ID!
+    verified: Boolean!
+    rating: Int!
+    comment: String!
+    book: Book!
+    reviewerName: String
+    """Scalar data type"""
+    createdAt: Date!
+}
+
+input ReviewFilter {
+    rating: Int
+    verified: Boolean
+    reviewerName: String
+    book: BookFilter
+}

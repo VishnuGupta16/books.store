@@ -3,17 +3,16 @@ package gupta.vishnu.graphql.books.store.entity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String firstName="";
-    private String lastName="";
-    private String email="";
-    private String phoneNumber="";
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
 
     @OneToMany(mappedBy = "author")
     private List<BookAuthor> bookAuthors = new ArrayList<>();

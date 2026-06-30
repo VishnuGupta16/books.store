@@ -5,6 +5,11 @@ type Book {
     authors: [BookAuthorEdge!]!
 }
 
+input BookFilter {
+    id: ID
+    title: String
+}
+
 input BookInput {
     name: String!
     title: String!

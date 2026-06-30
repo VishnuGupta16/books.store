@@ -34,8 +34,14 @@ Both `@ManyToOne` associations are **`FetchType.LAZY`** (eager `@ManyToOne` is a
 `role` is **not** a property of an author — an author can be MAIN_AUTHOR on one book and EDITOR on another. It's a property of the **relationship**. So the schema exposes the relationship itself as `BookAuthorEdge` (the GraphQL mirror of the `BookAuthor` link), and both `Book.authors` and `Author.books` return **edges**, not bare entities:
 
 ```graphql
+enum AuthorRole {
+    MAIN_AUTHOR
+    CO_AUTHOR
+    EDITOR
+}
+
 type BookAuthorEdge {
-    authorRole: String!
+    authorRole: AuthorRole!
     author: Author!
     book: Book!
 }
@@ -202,6 +208,7 @@ src/main/resources/
 - `@ManyToOne` defaults to **EAGER**, which silently causes N+1; made both LAZY and fetched explicitly.
 - LAZY alone doesn't remove N+1 — it moves it to access time. Pair LAZY with `join fetch` (or a batched resolver) to actually collapse the queries.
 - Relationship-specific data (`role`) belongs on an **edge type**, not on either entity.
+- `authorRole` is a **GraphQL enum** (`AuthorRole`) mapped by name to the Java enum, so invalid values are rejected by the schema rather than at runtime.
 - `@BatchMapping` is Spring's wrapper over the **DataLoader** pattern: field loads are queued and dispatched once per query level.
 
 ## Known follow-ups (not yet done)

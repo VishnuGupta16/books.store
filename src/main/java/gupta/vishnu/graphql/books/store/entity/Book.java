@@ -8,9 +8,9 @@ import java.util.List;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String name="";
-    private String title="";
+    private Long id;
+    private String name;
+    private String title;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<BookAuthor> bookAuthors = new ArrayList<>();
@@ -22,7 +22,11 @@ public class Book {
         this.title = title;
     }
 
-    public long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setTitle(String title) { this.title = title; }
+
+    public Long getId() { return id; }
     public String getName() { return name; }
     public String getTitle() { return title; }
     public List<BookAuthor> getBookAuthors() { return bookAuthors; }

@@ -4,4 +4,6 @@ type Query {
     author(id: ID): Author!
     authors: [Author!]!
     search(query: String!): [SearchBookOrAuthor]
+    reviews(filter: ReviewFilter): [Review]
+    review(id: ID!): Review
 }
